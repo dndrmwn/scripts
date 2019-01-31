@@ -1,0 +1,42 @@
+#!/system/bin/sh
+# For use with termux android app (https://play.google.com/store/apps/details?id=com.termux)
+#
+clear
+echo "\nAdblocker script by dndrmwn.\n"
+sleep 1
+echo "This script will download compiled hosts file maintained by"
+echo "StevenBlack (https://github.com/StevenBlack/hosts), and then put into flashable-zip.\n"
+sleep 3
+
+if [ -f /sdcard/Flash/adblocker.zip ]; then
+    echo "Preparing...\n"
+    rm -rf /sdcard/Flash/adblocker.zip
+    sleep 1
+fi
+
+if [ -f $HOME/adblocker/system/etc/hosts ]; then
+    echo "Deleting old generated hosts file...\n"
+    rm -rf $HOME/adblocker/system/etc/hosts
+    sleep 1
+fi
+
+echo "Getting hosts sources...\n"
+wget -O $HOME/adblocker/system/etc/hosts "https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling/hosts"
+sleep 1
+
+echo "\nAdding additional hosts rule..."
+echo "0.0.0.0 ads.indosatooredoo.com" >> $HOME/adblocker/system/etc/hosts
+echo "0.0.0.0 ads.telkomsel.com" >> $HOME/adblocker/system/etc/hosts
+echo "0.0.0.0 ibnads.xl.co.id" >> $HOME/adblocker/system/etc/hosts
+sleep 1
+
+echo "\nMaking flashable zip..."
+chmod 644 $HOME/adblocker/system/etc/hosts
+cd $HOME/adblocker
+zip -r /sdcard/Flash/adblocker.zip .
+sleep 1
+
+echo "\nDone!\n"
+cd $HOME
+sleep 3
+clear
