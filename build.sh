@@ -5,23 +5,30 @@
 
 set -e
 
-WORKING_PATH=~/GitHub/android_kernel_xiaomi_msm8998
-BUILD_PATH=~/Projects/builds/android_kernel_xiaomi_msm8998
+WORKING_PATH=~/GitHub/Simplicity
+BUILD_PATH=~/Projects/builds/Simplicity
+CLANG_PATH=/home/ubuntu/GitHub/linux-x86/clang-r353983c
+GCC_PATH=/home/ubuntu/GitHub/aarch64-linux-android-4.9
+ARM_PATH=/home/ubuntu/GitHub/arm-linux-androideabi-4.9
 
 if [[ $(pwd) -ef ${WORKING_PATH} ]]; then
 	defconfig=$1
 	if [[ -z ${defconfig} ]]; then
 		defconfig="sagit_defconfig"
 	fi
-
-	cd ../aarch64-linux-android-4.9
-	export CROSS_COMPILE=$(pwd)/bin/aarch64-linux-android-
-	export ARCH=arm64 && export SUBARCH=arm64
-	cd ../android_kernel_xiaomi_msm8998
+	
+	export KBUILD_COMPILER_STRING=$(${CLANG_PATH}/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')
 	make O="${BUILD_PATH}" clean
 	make O="${BUILD_PATH}" mrproper
-	make O="${BUILD_PATH}" "${defconfig}"
-	make O="${BUILD_PATH}" -j$(nproc --all)
+	make O="${BUILD_PATH}" ARCH=arm64 "${defconfig}"
+	
+	PATH="${CLANG_PATH}/bin:${GCC_PATH}/bin:${ARM_PATH}/bin:${PATH}"
+	make -j$(nproc --all) O="${BUILD_PATH}" \
+					ARCH=arm64 \
+					CC=clang \
+					CLANG_TRIPLE=aarch64-linux-gnu- \
+					CROSS_COMPILE=aarch64-linux-android- \
+					CROSS_COMPILE_ARM32=arm-linux-androideabi-
 else
 	echo "Please run this script from kernel source directory!"
 fi

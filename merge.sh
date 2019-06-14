@@ -4,7 +4,7 @@
 
 set -e
 
-WORKING_PATH=~/GitHub/android_kernel_xiaomi_msm8998
+WORKING_PATH=~/GitHub/Simplicity
 
 if [[ $(pwd) -ef ${WORKING_PATH} ]]; then
 	active_branch=$(git branch | grep \* | cut -d ' ' -f2)

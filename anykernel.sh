@@ -7,8 +7,8 @@
 
 set -e
 
-WORKING_PATH=~/GitHub/android_kernel_xiaomi_msm8998
-BUILD_PATH=~/Projects/builds/android_kernel_xiaomi_msm8998
+WORKING_PATH=~/GitHub/Simplicity
+BUILD_PATH=~/Projects/builds/Simplicity
 ANYKERNEL_PATH=~/Projects/anykernel
 RELEASE_PATH=~/Projects/releases
 
@@ -17,7 +17,7 @@ if [[ $(pwd) -ef ${WORKING_PATH} ]]; then
 	kernel_version=$(make kernelversion)
 
 	if [[ -z ${zip_name} ]]; then
-		zip_name="kernel-${kernel_version}.zip"
+		zip_name="simplicity-${kernel_version}.zip"
 	fi
 
 	rm -f "$ANYKERNEL_PATH"/kernel*
